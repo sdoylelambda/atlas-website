@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas — an AI assistant that finds its way</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Sans+3:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-900:#0c1622;
+    --ink-800:#101d2e;
+    --ink-700:#16273b;
+    --brass:#c8a24d;
+    --brass-bright:#e6c574;
+    --parchment:#f2e9d6;
+    --parchment-dim:#cfc4a8;
+    --teal:#4c7a86;
+    --line: rgba(200,162,77,0.28);
+    --display: 'Fraunces', serif;
+    --body: 'Source Sans 3', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background: var(--ink-900);
+    color: var(--parchment);
+    font-family: var(--body);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+
+  /* ---------- background texture: contour lines ---------- */
+  .contours{
+    position:fixed; inset:0; z-index:0; opacity:0.16; pointer-events:none;
+  }
+
+  a{color:inherit;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 32px; position:relative; z-index:1;}
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:0.18em; text-transform:uppercase;
+    color:var(--brass-bright); display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:''; width:22px; height:1px; background:var(--brass); display:inline-block;}
+
+  h1,h2,h3{font-family:var(--display); font-weight:600; letter-spacing:-0.01em;}
+
+  /* ---------- nav ---------- */
+  nav{
+    position:sticky; top:0; z-index:20;
+    background:rgba(12,22,34,0.86); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; padding:18px 32px;}
+  .brand{display:flex; align-items:center; gap:10px; font-family:var(--display); font-size:20px; font-weight:600; color:var(--parchment);}
+  .brand svg{width:22px; height:22px;}
+  .navlinks{display:flex; gap:32px; font-size:14px; font-family:var(--mono);}
+  .navlinks a{opacity:0.75; transition:opacity .2s;}
+  .navlinks a:hover{opacity:1; color:var(--brass-bright);}
+  @media (max-width:640px){ .navlinks{display:none;} }
+
+  /* ---------- hero ---------- */
+  header.hero{
+    padding:120px 0 100px; position:relative;
+    background:
+      radial-gradient(ellipse 900px 500px at 80% -10%, rgba(200,162,77,0.10), transparent 60%),
+      var(--ink-900);
+    border-bottom:1px solid var(--line);
+  }
+  .hero-grid{
+    display:grid; grid-template-columns: 1.1fr 0.9fr; gap:56px; align-items:center;
+  }
+  @media (max-width:860px){ .hero-grid{grid-template-columns:1fr;} }
+
+  .hero h1{
+    font-size:clamp(40px, 6vw, 68px); line-height:1.03; margin:22px 0 20px; color:var(--parchment);
+  }
+  .hero h1 em{font-style:italic; color:var(--brass-bright);}
+  .hero p.lede{font-size:19px; color:var(--parchment-dim); max-width:46ch; margin-bottom:36px;}
+
+  .cta-row{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn{
+    font-family:var(--mono); font-size:13px; letter-spacing:0.04em; text-transform:uppercase;
+    padding:14px 24px; border-radius:3px; display:inline-flex; align-items:center; gap:10px;
+    text-decoration:none; border:1px solid transparent; transition:transform .15s ease, background .2s;
+    cursor:pointer;
+  }
+  .btn-primary{background:var(--brass); color:var(--ink-900); font-weight:600;}
+  .btn-primary:hover{background:var(--brass-bright); transform:translateY(-1px);}
+  .btn-ghost{border-color:var(--line); color:var(--parchment);}
+  .btn-ghost:hover{border-color:var(--brass); color:var(--brass-bright);}
+
+  /* compass rose signature element */
+  .compass-wrap{display:flex; align-items:center; justify-content:center;}
+  .compass{width:min(340px, 100%); aspect-ratio:1; position:relative;}
+  .compass svg{width:100%; height:100%; animation:spin 90s linear infinite;}
+  @media (prefers-reduced-motion: reduce){ .compass svg{animation:none;} }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .compass-label{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-size:11px; letter-spacing:0.1em; color:var(--parchment-dim); text-align:center;
+  }
+
+  /* ---------- section shell ---------- */
+  section{padding:96px 0; border-bottom:1px solid var(--line); position:relative;}
+  section:last-of-type{border-bottom:none;}
+  .section-head{margin-bottom:48px;}
+  .section-head h2{font-size:clamp(28px,4vw,38px); margin-top:14px;}
+  .section-head p{color:var(--parchment-dim); max-width:60ch; margin-top:12px; font-size:17px;}
+
+  /* ---------- media / video ---------- */
+  .media-frame{
+    border:1px solid var(--line); border-radius:6px; overflow:hidden; background:var(--ink-800);
+    box-shadow:0 30px 60px -30px rgba(0,0,0,0.6);
+  }
+  .video-slot{
+    aspect-ratio:16/9; width:100%; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:14px;
+    background:
+      repeating-linear-gradient(45deg, rgba(200,162,77,0.05) 0 2px, transparent 2px 14px),
+      var(--ink-700);
+    color:var(--parchment-dim);
+  }
+  .play-icon{
+    width:56px; height:56px; border-radius:50%; border:1px solid var(--brass); display:flex; align-items:center; justify-content:center;
+  }
+  .video-slot span{font-family:var(--mono); font-size:12px; letter-spacing:0.08em; text-transform:uppercase;}
+  .video-caption{font-family:var(--mono); font-size:12px; color:var(--parchment-dim); margin-top:10px; letter-spacing:0.03em;}
+
+  .video-row{display:grid; grid-template-columns:1fr 1fr; gap:32px;}
+  @media (max-width:760px){ .video-row{grid-template-columns:1fr;} }
+
+  /* ---------- why built ---------- */
+  .why{
+    display:grid; grid-template-columns:auto 1fr; gap:28px; align-items:start;
+    border-left:2px solid var(--brass); padding-left:28px;
+  }
+  .why .mark{font-family:var(--display); font-size:64px; color:var(--brass); line-height:1;}
+  .why p{font-size:18px; color:var(--parchment-dim); max-width:62ch;}
+
+  /* ---------- waypoints / features ---------- */
+  .waypoints{display:flex; flex-direction:column;}
+  .waypoint{
+    display:grid; grid-template-columns:120px 1fr; gap:28px; padding:28px 0; border-top:1px solid var(--line);
+  }
+  .waypoint:last-child{border-bottom:1px solid var(--line);}
+  .coord{font-family:var(--mono); font-size:13px; color:var(--brass-bright); letter-spacing:0.02em; padding-top:4px;}
+  .waypoint h3{font-size:21px; color:var(--parchment); margin-bottom:8px;}
+  .waypoint p{color:var(--parchment-dim); font-size:15.5px; max-width:64ch;}
+
+  /* ---------- gallery ---------- */
+  .gallery{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  @media (max-width:760px){ .gallery{grid-template-columns:1fr;} }
+  .shot{
+    aspect-ratio:4/3; border:1px solid var(--line); border-radius:6px;
+    background: repeating-linear-gradient(-45deg, rgba(200,162,77,0.05) 0 2px, transparent 2px 14px), var(--ink-700);
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; color:var(--parchment-dim);
+  }
+  .shot span{font-family:var(--mono); font-size:11px; letter-spacing:0.06em; text-transform:uppercase;}
+
+  /* ---------- tech strip ---------- */
+  .tech-strip{display:flex; flex-wrap:wrap; gap:12px;}
+  .chip{
+    font-family:var(--mono); font-size:12.5px; padding:8px 14px; border:1px solid var(--line); border-radius:999px;
+    color:var(--parchment-dim);
+  }
+
+  /* ---------- downloads ---------- */
+  .downloads{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px;}
+  .dl-card{
+    border:1px solid var(--line); border-radius:6px; padding:26px; background:var(--ink-800);
+    display:flex; flex-direction:column; gap:14px; transition:border-color .2s, transform .2s;
+  }
+  .dl-card:hover{border-color:var(--brass); transform:translateY(-2px);}
+  .dl-platform{font-family:var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brass-bright);}
+  .dl-card h3{font-size:20px;}
+  .dl-card p{font-size:13.5px; color:var(--parchment-dim);}
+  .dl-note{
+    font-family:var(--mono); font-size:12px; color:var(--parchment-dim); margin-top:24px; border-top:1px dashed var(--line); padding-top:18px;
+  }
+
+  /* ---------- footer ---------- */
+  footer{padding:64px 0 48px;}
+  .footer-grid{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:24px;}
+  .foot-links{display:flex; gap:26px; font-family:var(--mono); font-size:13px;}
+  .foot-links a{opacity:0.7; transition:opacity .2s;}
+  .foot-links a:hover{opacity:1; color:var(--brass-bright);}
+  .foot-fine{font-family:var(--mono); font-size:11.5px; color:var(--parchment-dim); margin-top:28px; letter-spacing:0.02em;}
+
+  .support-banner{
+    margin-top:56px; border:1px dashed var(--line); border-radius:6px; padding:26px 28px;
+    display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;
+  }
+  .support-banner p{color:var(--parchment-dim); font-size:14.5px; max-width:52ch;}
+</style>
+</head>
+<body>
+
+<svg class="contours" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice">
+  <g fill="none" stroke="#c8a24d" stroke-width="1">
+    <ellipse cx="900" cy="150" rx="120" ry="80"/>
+    <ellipse cx="900" cy="150" rx="200" ry="140"/>
+    <ellipse cx="900" cy="150" rx="280" ry="200"/>
+    <ellipse cx="900" cy="150" rx="360" ry="260"/>
+    <ellipse cx="150" cy="700" rx="100" ry="70"/>
+    <ellipse cx="150" cy="700" rx="180" ry="130"/>
+    <ellipse cx="150" cy="700" rx="260" ry="190"/>
+  </g>
+</svg>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#c8a24d" stroke-width="1.4"><circle cx="12" cy="12" r="9.5"/><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3"/><path d="M12 12l4-6-6 4z" fill="#c8a24d" stroke="none"/></svg>
+      Atlas
+    </div>
+    <div class="navlinks">
+      <a href="#watch">Watch</a>
+      <a href="#why">Why</a>
+      <a href="#features">Features</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#download">Download</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">An AI assistant, free and open</div>
+      <h1>Ask it anything.<br>It finds <em>the way.</em></h1>
+      <p class="lede">Atlas is a free, open-source AI assistant that runs on your desktop — plan your day, dig through files, automate the boring parts, without sending your life to someone else's server.</p>
+      <div class="cta-row">
+        <a href="#download" class="btn btn-primary">Download Atlas — free</a>
+        <a href="#watch" class="btn btn-ghost">Watch the demo</a>
+      </div>
+    </div>
+    <div class="compass-wrap">
+      <div class="compass">
+        <svg viewBox="0 0 200 200" fill="none">
+          <circle cx="100" cy="100" r="92" stroke="#c8a24d" stroke-width="1" opacity="0.5"/>
+          <circle cx="100" cy="100" r="70" stroke="#c8a24d" stroke-width="1" opacity="0.35"/>
+          <g stroke="#e6c574" stroke-width="1">
+            <line x1="100" y1="8" x2="100" y2="28"/>
+            <line x1="100" y1="172" x2="100" y2="192"/>
+            <line x1="8" y1="100" x2="28" y2="100"/>
+            <line x1="172" y1="100" x2="192" y2="100"/>
+          </g>
+          <path d="M100 40 L112 100 L100 160 L88 100 Z" fill="#c8a24d" opacity="0.85"/>
+          <path d="M40 100 L100 88 L160 100 L100 112 Z" fill="#4c7a86" opacity="0.85"/>
+          <circle cx="100" cy="100" r="5" fill="#f2e9d6"/>
+        </svg>
+        <div class="compass-label" style="margin-top:220px;">N 40.7128° · W 74.0060°</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="watch">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Field notes</div>
+      <h2>See it in the wild</h2>
+      <p>Two short walkthroughs — the first covers day-to-day use, the second gets into how it's built.</p>
+    </div>
+    <div class="video-row">
+      <div>
+        <div class="media-frame">
+          <div class="video-slot">
+            <div class="play-icon">▶</div>
+            <span>Demo · Getting started with Atlas</span>
+          </div>
+        </div>
+        <div class="video-caption">[ embed YouTube link here — 3:40 ]</div>
+      </div>
+      <div>
+        <div class="media-frame">
+          <div class="video-slot">
+            <div class="play-icon">▶</div>
+            <span>Deep dive · How Atlas is built</span>
+          </div>
+        </div>
+        <div class="video-caption">[ embed YouTube link here — 6:15 ]</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="why">
+  <div class="wrap">
+    <div class="why">
+      <div class="mark">“</div>
+      <p>I built Atlas because I wanted an assistant that lived on my machine, not in someone else's data center — something I could point at my own files and workflows without a subscription standing between me and my own computer. [Replace with your real motivation — 2-3 sentences on the problem and why you built it.]</p>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Waypoints</div>
+      <h2>What it actually does</h2>
+      <p>Four things Atlas is built to handle well — replace with your real feature list.</p>
+    </div>
+    <div class="waypoints">
+      <div class="waypoint">
+        <div class="coord">01 · LOCAL</div>
+        <div>
+          <h3>Runs on your machine</h3>
+          <p>No cloud roundtrip for your files or history — Atlas reads and reasons locally by default.</p>
+        </div>
+      </div>
+      <div class="waypoint">
+        <div class="coord">02 · TASKS</div>
+        <div>
+          <h3>Automates the repetitive stuff</h3>
+          <p>Hand off multi-step chores — file cleanup, summarizing, scheduling — and check the result instead of doing the steps.</p>
+        </div>
+      </div>
+      <div class="waypoint">
+        <div class="coord">03 · MEMORY</div>
+        <div>
+          <h3>Remembers context you give it</h3>
+          <p>Atlas keeps track of what you tell it across a session, so you're not re-explaining yourself every message.</p>
+        </div>
+      </div>
+      <div class="waypoint">
+        <div class="coord">04 · OPEN</div>
+        <div>
+          <h3>Open source, always free</h3>
+          <p>The full source is on GitHub. Read it, fork it, or just trust it a little more because you can.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Charted</div>
+      <h2>A few screenshots</h2>
+    </div>
+    <div class="gallery">
+      <div class="shot"><span>[ screenshot 1 ]</span></div>
+      <div class="shot"><span>[ screenshot 2 ]</span></div>
+      <div class="shot"><span>[ screenshot 3 ]</span></div>
+    </div>
+    <div class="tech-strip" style="margin-top:40px;">
+      <span class="chip">Python</span>
+      <span class="chip">PyInstaller</span>
+      <span class="chip">Flutter / Android</span>
+      <span class="chip">[ your stack ]</span>
+    </div>
+  </div>
+</section>
+
+<section id="download">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Set out</div>
+      <h2>Download Atlas</h2>
+      <p>Free, no account required. Pick your platform.</p>
+    </div>
+    <div class="downloads">
+      <div class="dl-card">
+        <div class="dl-platform">Windows</div>
+        <h3>Atlas.exe</h3>
+        <p>Standalone build, no installer needed.</p>
+        <a href="#" class="btn btn-ghost" style="align-self:flex-start;">Download</a>
+      </div>
+      <div class="dl-card">
+        <div class="dl-platform">macOS</div>
+        <h3>Atlas.dmg</h3>
+        <p>Universal build, Intel and Apple Silicon.</p>
+        <a href="#" class="btn btn-ghost" style="align-self:flex-start;">Download</a>
+      </div>
+      <div class="dl-card">
+        <div class="dl-platform">Linux</div>
+        <h3>Atlas.AppImage</h3>
+        <p>Portable — no install, just run it.</p>
+        <a href="#" class="btn btn-ghost" style="align-self:flex-start;">Download</a>
+      </div>
+      <div class="dl-card">
+        <div class="dl-platform">Android</div>
+        <h3>Atlas.apk</h3>
+        <p>Sideload — enable "install from unknown sources".</p>
+        <a href="#" class="btn btn-ghost" style="align-self:flex-start;">Download</a>
+      </div>
+    </div>
+    <div class="dl-note">[ Point these buttons at your GitHub Releases URLs, e.g. github.com/you/atlas/releases/latest/download/... ]</div>
+
+    <div class="support-banner">
+      <p>Atlas is free and will stay free. If it's useful to you, a small donation helps keep it that way.</p>
+      <a href="#" class="btn btn-primary">Support the project</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="brand" style="font-size:17px;">Atlas</div>
+      <div class="foot-links">
+        <a href="#">GitHub</a>
+        <a href="#">Documentation</a>
+        <a href="#">Report an issue</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+    <div class="foot-fine">Atlas v1.0.0 · MIT License · Built by [your name]</div>
+  </div>
+</footer>
+
+</body>
+</html>
