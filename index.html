@@ -291,7 +291,7 @@
   <div class="wrap">
     <div class="why">
       <div class="mark">“</div>
-      <p>I built Atlas because I wanted an assistant that lived on my machine, not in someone else's data center — something I could point at my own files and workflows without a subscription standing between me and my own computer. [Replace with your real motivation — 2-3 sentences on the problem and why you built it.]</p>
+      <p>I built Atlas because I wanted an assistant that lived on my machine, not in someone else's data center — something that could open apps, drive my browser, and manage my files directly instead of just talking about it. It reads my calendar, drafts and sends email, and pulls in Gemini or Claude when a question calls for deeper reasoning or a longer document than it should handle alone.</p>
     </div>
   </div>
 </section>
@@ -301,34 +301,55 @@
     <div class="section-head">
       <div class="eyebrow">Waypoints</div>
       <h2>What it actually does</h2>
-      <p>Four things Atlas is built to handle well — replace with your real feature list.</p>
+      <p>Atlas talks, but it also acts — here's what it's actually built to do.</p>
     </div>
     <div class="waypoints">
       <div class="waypoint">
-        <div class="coord">01 · LOCAL</div>
+        <div class="coord">01 · CONTROL</div>
         <div>
-          <h3>Runs on your machine</h3>
-          <p>No cloud roundtrip for your files or history — Atlas reads and reasons locally by default.</p>
+          <h3>Drives your computer, not just your chat window</h3>
+          <p>Opens applications, controls your browser, searches the web, and navigates pages on command — Atlas acts on your machine instead of describing what you should click.</p>
         </div>
       </div>
       <div class="waypoint">
-        <div class="coord">02 · TASKS</div>
+        <div class="coord">02 · FILES</div>
         <div>
-          <h3>Automates the repetitive stuff</h3>
-          <p>Hand off multi-step chores — file cleanup, summarizing, scheduling — and check the result instead of doing the steps.</p>
+          <h3>Reads, writes, and runs</h3>
+          <p>Creates files and folders, generates code in Python, JavaScript, HTML and more, reads and summarizes PDFs, runs scripts, and manages your workspace directly.</p>
         </div>
       </div>
       <div class="waypoint">
-        <div class="coord">03 · MEMORY</div>
+        <div class="coord">03 · REACH</div>
         <div>
-          <h3>Remembers context you give it</h3>
-          <p>Atlas keeps track of what you tell it across a session, so you're not re-explaining yourself every message.</p>
+          <h3>Follows you to your phone</h3>
+          <p>Runs on Android and can send complex commands back to your computer — start a task from your desk, check on it from your pocket.</p>
         </div>
       </div>
       <div class="waypoint">
-        <div class="coord">04 · OPEN</div>
+        <div class="coord">04 · SIGHT</div>
         <div>
-          <h3>Open source, always free</h3>
+          <h3>Sees through your webcam</h3>
+          <p>When enabled, Atlas can look at what's in front of it, identify objects, read text, and answer questions about what's in view.</p>
+        </div>
+      </div>
+      <div class="waypoint">
+        <div class="coord">05 · REASONING</div>
+        <div>
+          <h3>Calls in bigger models when it matters</h3>
+          <p>Routes to Gemini for real-time information and long document analysis, or Claude for complex reasoning and large codebases — your choice of which to enable.</p>
+        </div>
+      </div>
+      <div class="waypoint">
+        <div class="coord">06 · CALENDAR + EMAIL</div>
+        <div>
+          <h3>Handles your calendar and inbox</h3>
+          <p>Optional integrations let Atlas check and manage your Google Calendar, and read and send email through Gmail — on your say-so, nothing automatic.</p>
+        </div>
+      </div>
+      <div class="waypoint">
+        <div class="coord">07 · OPEN</div>
+        <div>
+          <h3>Open source</h3>
           <p>The full source is on GitHub. Read it, fork it, or just trust it a little more because you can.</p>
         </div>
       </div>
@@ -343,17 +364,28 @@
       <h2>A few screenshots</h2>
     </div>
     <div class="gallery">
-      <div class="shot"><span>[ screenshot 1 ]</span></div>
-      <div class="shot"><span>[ screenshot 2 ]</span></div>
-      <div class="shot"><span>[ screenshot 3 ]</span></div>
+      <div class="shot"><img src="assets/GUI_welcome_screen.png" alt="Atlas screenshot 31"></div>
+      <div class="shot"><img src="assets/GUI_thinking_classifying_screen.png" alt="Atlas screenshot 2"></div>
+      <div class="shot"><img src="assets/GUI_talking_screen.png" alt="Atlas screenshot 4"></div>
+      <div class="shot"><img src="assets/GUI_sleeping_screen.png" alt="Atlas screenshot 3"></div>
+      <div class="shot"><img src="assets/GUI_error_screen.png" alt="Atlas screenshot 5"></div>
     </div>
+
     <div class="tech-strip" style="margin-top:40px;">
       <span class="chip">Python</span>
-      <span class="chip">PyInstaller</span>
       <span class="chip">Flutter / Android</span>
-      <span class="chip">[ your stack ]</span>
+      <span class="chip">PyTorch</span>
+      <span class="chip">Whisper</span>
+      <span class="chip">OpenCV</span>
+      <span class="chip">Playwright</span>
+      <span class="chip">FAISS</span>
+      <span class="chip">Ollama</span>
+      <span class="chip">FastAPI</span>
+      <span class="chip">Gemini API</span>
+      <span class="chip">Claude API</span>
+      <span class="chip">Google Calendar API</span>
+      <span class="chip">Gmail API</span>
     </div>
-  </div>
 </section>
 
 <section id="download">
@@ -365,13 +397,13 @@
     </div>
     <div class="downloads">
       <div class="dl-card">
-        <div class="dl-platform">Windows</div>
+        <div class="dl-platform">Windows - Coming soon!</div>
         <h3>Atlas.exe</h3>
         <p>Standalone build, no installer needed.</p>
         <a href="#" class="btn btn-ghost" style="align-self:flex-start;">Download</a>
       </div>
       <div class="dl-card">
-        <div class="dl-platform">macOS</div>
+        <div class="dl-platform">macOS - Coming soon!</div>
         <h3>Atlas.dmg</h3>
         <p>Universal build, Intel and Apple Silicon.</p>
         <a href="#" class="btn btn-ghost" style="align-self:flex-start;">Download</a>
@@ -389,10 +421,10 @@
         <a href="#" class="btn btn-ghost" style="align-self:flex-start;">Download</a>
       </div>
     </div>
-    <div class="dl-note">[ Point these buttons at your GitHub Releases URLs, e.g. github.com/you/atlas/releases/latest/download/... ]</div>
+    <div class="dl-note">https://github.com/sdoylelambda/atlas-website/releases/tag/v1.0.0</div>
 
     <div class="support-banner">
-      <p>Atlas is free and will stay free. If it's useful to you, a small donation helps keep it that way.</p>
+      <p>Atlas is free. If it's useful to you, a small donation helps keep it that way.</p>
       <a href="#" class="btn btn-primary">Support the project</a>
     </div>
   </div>
@@ -403,13 +435,13 @@
     <div class="footer-grid">
       <div class="brand" style="font-size:17px;">Atlas</div>
       <div class="foot-links">
-        <a href="#">GitHub</a>
-        <a href="#">Documentation</a>
-        <a href="#">Report an issue</a>
-        <a href="#">Contact</a>
+        <a href="https://github.com/sdoylelambda/A.T.L.A.S.">GitHub</a>
+        <a href="https://github.com/sdoylelambda/A.T.L.A.S./blob/main/README.md">Documentation</a>
+        <a href="mailto:sdoyledev@gmail.com">Report an issue</a>
+        <a href="mailto:sdoyledev@gmail.com">Contact</a>
       </div>
     </div>
-    <div class="foot-fine">Atlas v1.0.0 · MIT License · Built by [your name]</div>
+    <div class="foot-fine">Atlas v0.7.3 · MIT License · Built by Sean Doyle</div>
   </div>
 </footer>
 
