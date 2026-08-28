@@ -150,14 +150,34 @@
   .waypoint p{color:var(--parchment-dim); font-size:15.5px; max-width:64ch;}
 
   /* ---------- gallery ---------- */
-  .gallery{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  .gallery{display:grid; grid-template-columns:repeat(2,1fr); gap:20px;}
   @media (max-width:760px){ .gallery{grid-template-columns:1fr;} }
   .shot{
     aspect-ratio:4/3; border:1px solid var(--line); border-radius:6px;
     background: repeating-linear-gradient(-45deg, rgba(200,162,77,0.05) 0 2px, transparent 2px 14px), var(--ink-700);
-    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; color:var(--parchment-dim);
+    overflow:hidden;
+    min-width:0;
   }
-  .shot span{font-family:var(--mono); font-size:11px; letter-spacing:0.06em; text-transform:uppercase;}
+  .shot img{width:100%; height:100%; object-fit:contain; display:block;}
+
+/* ---------- android gallery ---------- */
+.gallery-lg{
+  display:grid; grid-template-columns:repeat(2,1fr); gap:24px;
+  width:160%; margin-left:-30%;
+}
+@media (max-width:760px){
+  .gallery-lg{
+    grid-template-columns:1fr;
+    width:100%;
+    margin-left:0;
+    gap:20px;
+  }
+}
+.gallery-lg .shot{ max-width:none; margin:0; }
+.shot-caption{
+  font-family:var(--mono); font-size:12px; color:var(--parchment-dim);
+  margin-top:10px; letter-spacing:0.03em; text-align:center;
+}
 
   /* ---------- tech strip ---------- */
   .tech-strip{display:flex; flex-wrap:wrap; gap:12px;}
@@ -364,12 +384,39 @@
       <h2>A few screenshots</h2>
     </div>
     <div class="gallery">
-      <div class="shot"><img src="assets/GUI_welcome_screen.png" alt="Atlas screenshot 31"></div>
-      <div class="shot"><img src="assets/GUI_thinking_classifying_screen.png" alt="Atlas screenshot 2"></div>
-      <div class="shot"><img src="assets/GUI_talking_screen.png" alt="Atlas screenshot 4"></div>
-      <div class="shot"><img src="assets/GUI_sleeping_screen.png" alt="Atlas screenshot 3"></div>
+      <div class="shot"><img src="assets/Listening.png" alt="Atlas screenshot 31"></div>
+      <div class="shot"><img src="assets/Thinking.png" alt="Atlas screenshot 2"></div>
+      <div class="shot"><img src="assets/Speaking.png" alt="Atlas screenshot 4"></div>
+      <div class="shot"><img src="assets/Sleeping.png" alt="Atlas screenshot 3"></div>
       <div class="shot"><img src="assets/GUI_error_screen.png" alt="Atlas screenshot 5"></div>
     </div>
+
+    <div class="section-head">
+      <div class="eyebrow">Charted</div>
+      <h2>Andriod App</h2>
+    </div>
+    <div class="gallery-lg">
+  <div>
+    <div class="shot"><img src="assets/android-atlas-pics/listening.jpg" alt="Atlas listening on Android"></div>
+    <p class="shot-caption">Listening for a voice command</p>
+  </div>
+  <div>
+    <div class="shot"><img src="assets/android-atlas-pics/thinking.jpg" alt="Atlas thinking on Android"></div>
+    <p class="shot-caption">Processing the request</p>
+  </div>
+  <div>
+    <div class="shot"><img src="assets/android-atlas-pics/speaking-emails.jpg" alt="Atlas reading emails aloud"></div>
+    <p class="shot-caption">Checking new Gmail messages</p>
+  </div>
+  <div>
+    <div class="shot"><img src="assets/android-atlas-pics/speaking calendar.jpg" alt="Atlas drafting an email"></div>
+    <p class="shot-caption">Speaking Google Calendar Events</p>
+  </div>
+  <div>
+    <div class="shot"><img src="assets/android-atlas-pics/error.jpg" alt="Atlas error screen"></div>
+    <p class="shot-caption">Error handling screen</p>
+  </div>
+</div>
 
     <div class="tech-strip" style="margin-top:40px;">
       <span class="chip">Python</span>
