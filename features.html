@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas — Features & Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Sans+3:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-900:#0c1622;
+    --ink-800:#101d2e;
+    --ink-700:#16273b;
+    --brass:#c8a24d;
+    --brass-bright:#e6c574;
+    --parchment:#f2e9d6;
+    --parchment-dim:#cfc4a8;
+    --teal:#4c7a86;
+    --green:#6fae7a;
+    --red:#c96a56;
+    --line: rgba(200,162,77,0.28);
+    --display: 'Fraunces', serif;
+    --body: 'Source Sans 3', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background: var(--ink-900);
+    color: var(--parchment);
+    font-family: var(--body);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  a{color:inherit;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 32px; position:relative; z-index:1;}
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:0.18em; text-transform:uppercase;
+    color:var(--brass-bright); display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:''; width:22px; height:1px; background:var(--brass); display:inline-block;}
+  h1,h2,h3{font-family:var(--display); font-weight:600; letter-spacing:-0.01em;}
+
+  /* ---------- nav ---------- */
+  nav{
+    position:sticky; top:0; z-index:20;
+    background:rgba(12,22,34,0.86); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; padding:18px 32px;}
+  .brand{display:flex; align-items:center; gap:10px; font-family:var(--display); font-size:20px; font-weight:600; color:var(--parchment);}
+  .brand svg{width:22px; height:22px;}
+  .navlinks{display:flex; gap:32px; font-size:14px; font-family:var(--mono);}
+  .navlinks a{opacity:0.75; transition:opacity .2s;}
+  .navlinks a:hover, .navlinks a.active{opacity:1; color:var(--brass-bright);}
+  @media (max-width:640px){ .navlinks{display:none;} }
+
+  /* ---------- page header ---------- */
+  .page-header{
+    padding:80px 0 60px; position:relative;
+    background: radial-gradient(ellipse 900px 500px at 80% -10%, rgba(200,162,77,0.10), transparent 60%), var(--ink-900);
+    border-bottom:1px solid var(--line);
+  }
+  .page-header h1{font-size:clamp(36px, 5vw, 54px); line-height:1.05; margin:18px 0 16px;}
+  .page-header p{font-size:18px; color:var(--parchment-dim); max-width:60ch;}
+  .back-link{
+    font-family:var(--mono); font-size:13px; color:var(--parchment-dim); text-decoration:none;
+    display:inline-flex; align-items:center; gap:6px; margin-bottom:20px; transition:color .2s;
+  }
+  .back-link:hover{color:var(--brass-bright);}
+
+  /* ---------- section shell ---------- */
+  section{padding:80px 0; border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:none;}
+  .section-head{margin-bottom:44px;}
+  .section-head h2{font-size:clamp(26px,4vw,34px); margin-top:14px;}
+  .section-head p{color:var(--parchment-dim); max-width:64ch; margin-top:12px; font-size:16.5px;}
+
+  /* ---------- architecture flow ---------- */
+  .flow{display:flex; flex-direction:column; gap:0;}
+  .flow-step{
+    display:grid; grid-template-columns:56px 1fr; gap:22px; padding:22px 0; border-top:1px solid var(--line);
+    position:relative;
+  }
+  .flow-step:last-child{border-bottom:1px solid var(--line);}
+  .flow-num{
+    font-family:var(--mono); font-size:13px; color:var(--brass-bright); padding-top:3px;
+  }
+  .flow-step h3{font-size:19px; margin-bottom:6px;}
+  .flow-step p{color:var(--parchment-dim); font-size:15px; max-width:66ch;}
+  .flow-tag{
+    display:inline-block; font-family:var(--mono); font-size:11px; letter-spacing:0.05em;
+    color:var(--brass-bright); border:1px solid var(--line); border-radius:999px; padding:3px 10px;
+    margin-top:8px;
+  }
+
+  /* ---------- orb states table ---------- */
+  .orb-table{width:100%; border-collapse:collapse; font-size:15px;}
+  .orb-table th{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--brass-bright); text-align:left; padding:12px 16px; border-bottom:1px solid var(--line);
+  }
+  .orb-table td{padding:16px; border-bottom:1px solid var(--line); color:var(--parchment-dim);}
+  .orb-table tr:last-child td{border-bottom:none;}
+  .orb-dot{width:12px; height:12px; border-radius:50%; display:inline-block; margin-right:10px; vertical-align:middle;}
+  .orb-state{color:var(--parchment); font-weight:600;}
+
+  /* ---------- command tables ---------- */
+  .cmd-group{margin-bottom:40px;}
+  .cmd-group:last-child{margin-bottom:0;}
+  .cmd-group h3{
+    font-family:var(--mono); font-size:13px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--brass-bright); margin-bottom:16px;
+  }
+  .cmd-table{width:100%; border-collapse:collapse; font-size:14.5px;}
+  .cmd-table td{padding:11px 0; border-top:1px solid var(--line); vertical-align:top;}
+  .cmd-table tr:first-child td{border-top:none;}
+  .cmd-say{font-family:var(--mono); color:var(--brass-bright); padding-right:24px; white-space:nowrap; font-size:13px;}
+  .cmd-result{color:var(--parchment-dim);}
+
+  /* ---------- privacy callout ---------- */
+  .privacy-box{
+    border:1px solid var(--line); border-radius:8px; padding:32px;
+    background: repeating-linear-gradient(-45deg, rgba(200,162,77,0.04) 0 2px, transparent 2px 14px), var(--ink-800);
+  }
+  .privacy-box h3{font-size:22px; margin-bottom:14px; color:var(--parchment);}
+  .privacy-list{list-style:none; display:flex; flex-direction:column; gap:12px; margin-top:18px;}
+  .privacy-list li{
+    display:flex; align-items:flex-start; gap:12px; font-size:15px; color:var(--parchment-dim);
+  }
+  .privacy-list li::before{
+    content:'◆'; color:var(--brass); font-size:11px; padding-top:5px; flex-shrink:0;
+  }
+
+  /* ---------- platform table ---------- */
+  .platform-table{width:100%; border-collapse:collapse; font-size:14.5px;}
+  .platform-table th{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--brass-bright); text-align:left; padding:12px 16px; border-bottom:1px solid var(--line);
+  }
+  .platform-table td{padding:14px 16px; border-bottom:1px solid var(--line); color:var(--parchment-dim);}
+  .platform-table tr:last-child td{border-bottom:none;}
+  .platform-table td:not(:first-child){text-align:center; font-size:17px;}
+  .platform-note{
+    margin-top:20px; font-size:13.5px; color:var(--parchment-dim); font-family:var(--mono); line-height:1.7;
+  }
+
+  /* ---------- cta ---------- */
+  .cta-band{
+    text-align:center; padding:70px 0;
+  }
+  .cta-band p{color:var(--parchment-dim); font-size:17px; margin-bottom:24px;}
+  .btn{
+    font-family:var(--mono); font-size:13px; letter-spacing:0.04em; text-transform:uppercase;
+    padding:14px 24px; border-radius:3px; display:inline-flex; align-items:center; gap:10px;
+    text-decoration:none; border:1px solid transparent; transition:transform .15s ease, background .2s;
+    cursor:pointer;
+  }
+  .btn-primary{background:var(--brass); color:var(--ink-900); font-weight:600;}
+  .btn-primary:hover{background:var(--brass-bright); transform:translateY(-1px);}
+
+  /* ---------- footer ---------- */
+  footer{padding:56px 0 48px; border-top:1px solid var(--line);}
+  .footer-grid{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:24px;}
+  .foot-links{display:flex; gap:26px; font-family:var(--mono); font-size:13px;}
+  .foot-links a{opacity:0.7; transition:opacity .2s;}
+  .foot-links a:hover{opacity:1; color:var(--brass-bright);}
+  .foot-fine{font-family:var(--mono); font-size:11.5px; color:var(--parchment-dim); margin-top:28px; letter-spacing:0.02em;}
+
+  @media (max-width:640px){
+    .cmd-say{white-space:normal;}
+    .cmd-table td{display:block; padding:4px 0;}
+    .cmd-table tr{display:block; padding:12px 0; border-top:1px solid var(--line);}
+    .cmd-table tr:first-child{border-top:none;}
+    .cmd-table td{border-top:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#c8a24d" stroke-width="1.4"><circle cx="12" cy="12" r="9.5"/><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3"/><path d="M12 12l4-6-6 4z" fill="#c8a24d" stroke="none"/></svg>
+      Atlas
+    </div>
+    <div class="navlinks">
+      <a href="index.html#watch">Watch</a>
+      <a href="index.html#why">Why</a>
+      <a href="features.html" class="active">Features</a>
+      <a href="index.html#gallery">Gallery</a>
+      <a href="index.html#download">Download</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="wrap">
+    <a href="index.html" class="back-link">← Back to Atlas</a>
+    <div class="eyebrow">Under the hood</div>
+    <h1>How Atlas actually thinks</h1>
+    <p class="lede">A layered intelligence system, a holographic orb that shows its state, and a full command set — all running locally by default. Here's the deeper look.</p>
+  </div>
+</header>
+
+<section id="architecture">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Architecture</div>
+      <h2>Seven layers, one assistant</h2>
+      <p>Every command runs through a routing pipeline designed to answer fast when it can, and escalate to something smarter when it needs to.</p>
+    </div>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">01</div>
+        <div>
+          <h3>Fast keyword layer</h3>
+          <p>Instant response for known commands — opening apps, wake words, pause/cancel. No model call needed.</p>
+          <span class="flow-tag">~instant</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">02</div>
+        <div>
+          <h3>phi3:mini</h3>
+          <p>Handles simple conversational questions directly. Escalates anything that looks like a real task.</p>
+          <span class="flow-tag">local · 2–4s</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">03</div>
+        <div>
+          <h3>Mistral 7B</h3>
+          <p>Orchestrates complex multi-step tasks — generates a structured JSON execution plan, speaks a summary, and waits for confirmation before doing anything.</p>
+          <span class="flow-tag">local</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">04</div>
+        <div>
+          <h3>DeepSeek Coder 6.7B</h3>
+          <p>Dedicated code generation model — handles every code file Atlas writes, in Python, JavaScript, HTML, and more.</p>
+          <span class="flow-tag">local</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">05</div>
+        <div>
+          <h3>Cloud APIs — opt-in</h3>
+          <p>Claude and Gemini are available for long-context reasoning and real-time information — always disabled by default, always asking permission before use.</p>
+          <span class="flow-tag">opt-in only</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">06</div>
+        <div>
+          <h3>LLaVA</h3>
+          <p>Local vision model — analyzes webcam frames for object identification, scene description, and reading text in view.</p>
+          <span class="flow-tag">local</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">07</div>
+        <div>
+          <h3>MemPalace</h3>
+          <p>Controlled memory recall and formatting — semantic search over what you've told Atlas to remember, injected as context when relevant.</p>
+          <span class="flow-tag">local</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="orb">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">The interface</div>
+      <h2>An orb that shows its state</h2>
+      <p>The GUI is a PyQt5 window with a vispy 3D particle orb — per-particle color variation, depth-based sizing, and beam connections between nearby particles for a holographic look. Each state below has distinct particle density, breathing speed, and connection density.</p>
+    </div>
+    <table class="orb-table">
+      <thead>
+        <tr><th>State</th><th>Color</th><th>Animation</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="orb-dot" style="background:#4499ff;"></span><span class="orb-state">Listening</span></td><td>Blue</td><td>Slow, gentle pulse</td></tr>
+        <tr><td><span class="orb-dot" style="background:var(--green);"></span><span class="orb-state">Thinking</span></td><td>Green</td><td>Medium pulse, more particles</td></tr>
+        <tr><td><span class="orb-dot" style="background:#8fd6ff;"></span><span class="orb-state">Speaking</span></td><td>Light blue</td><td>Fast pulse</td></tr>
+        <tr><td><span class="orb-dot" style="background:#e6c574;"></span><span class="orb-state">Sleeping</span></td><td>Yellow</td><td>Very slow, deep breath, sparse particles</td></tr>
+        <tr><td><span class="orb-dot" style="background:var(--red);"></span><span class="orb-state">Error</span></td><td>Red</td><td>Rapid jitter</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="commands">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Talk to it</div>
+      <h2>A sample of what you can say</h2>
+      <p>A taste of the full command set — memory, apps, code generation, web, and calendar/email are all voice- or text-driven.</p>
+    </div>
+
+    <div class="cmd-group">
+      <h3>Everyday questions</h3>
+      <table class="cmd-table">
+        <tr><td class="cmd-say">"how long is the Nile River"</td><td class="cmd-result">Answered instantly by phi3 — no escalation needed</td></tr>
+        <tr><td class="cmd-say">"what's the capital of South Dakota"</td><td class="cmd-result">Quick factual answer, 2–4 seconds</td></tr>
+        <tr><td class="cmd-say">"what's 1 plus 1"</td><td class="cmd-result">Handled directly — simple math and trivia never touch the orchestrator</td></tr>
+      </table>
+    </div>
+
+    <div class="cmd-group">
+      <h3>Memory</h3>
+      <table class="cmd-table">
+        <tr><td class="cmd-say">"remember that I prefer async python over threading"</td><td class="cmd-result">Stores preference in long-term memory</td></tr>
+        <tr><td class="cmd-say">"what do you remember about me"</td><td class="cmd-result">Retrieves stored preferences and facts</td></tr>
+        <tr><td class="cmd-say">"forget that I like X"</td><td class="cmd-result">Removes a specific stored memory</td></tr>
+      </table>
+    </div>
+
+    <div class="cmd-group">
+      <h3>Code generation</h3>
+      <table class="cmd-table">
+        <tr><td class="cmd-say">"create a python file called calculator.py with add and subtract methods"</td><td class="cmd-result">Generates a working Python class</td></tr>
+        <tr><td class="cmd-say">"create a homepage.html with about and contact sections using inline css"</td><td class="cmd-result">Generates a styled HTML page</td></tr>
+      </table>
+    </div>
+
+    <div class="cmd-group">
+      <h3>Web & browser</h3>
+      <table class="cmd-table">
+        <tr><td class="cmd-say">"google latest AI news"</td><td class="cmd-result">Opens browser, searches Google</td></tr>
+        <tr><td class="cmd-say">"navigate to github.com"</td><td class="cmd-result">Opens URL directly</td></tr>
+        <tr><td class="cmd-say">"click first result"</td><td class="cmd-result">Clicks the first search result</td></tr>
+      </table>
+    </div>
+
+    <div class="cmd-group">
+      <h3>Calendar & Gmail</h3>
+      <table class="cmd-table">
+        <tr><td class="cmd-say">"what do I have today"</td><td class="cmd-result">Reads today's events</td></tr>
+        <tr><td class="cmd-say">"add meeting friday at 2pm for 2 hours"</td><td class="cmd-result">Creates the event, with duration parsed directly</td></tr>
+        <tr><td class="cmd-say">"reply to {name}"</td><td class="cmd-result">Drafts a generated response for review</td></tr>
+      </table>
+    </div>
+
+    <div class="cmd-group">
+      <h3>Vision</h3>
+      <table class="cmd-table">
+        <tr><td class="cmd-say">"what do you see"</td><td class="cmd-result">Describes the full scene via webcam</td></tr>
+        <tr><td class="cmd-say">"read this"</td><td class="cmd-result">Transcribes visible text</td></tr>
+        <tr><td class="cmd-say">"is anyone there"</td><td class="cmd-result">Detects people in frame</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="privacy">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">First principles</div>
+      <h2>Local by default, cloud by permission</h2>
+    </div>
+    <div class="privacy-box">
+      <h3>What that actually means</h3>
+      <ul class="privacy-list">
+        <li>All processing is local by default — nothing leaves your machine unless you say so</li>
+        <li>Cloud API calls (Claude, Gemini) are disabled out of the box</li>
+        <li>When enabled, Atlas asks permission before every single API call — not just once at setup</li>
+        <li>Anthropic and Google don't use API calls to train their models by default</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="platforms">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Compatibility</div>
+      <h2>Platform support</h2>
+    </div>
+    <table class="platform-table">
+      <thead>
+        <tr><th>Feature</th><th>Linux</th><th>Mac</th><th>Windows</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Core AI / LLM</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Voice I/O</td><td>✅</td><td>✅</td><td>⚠️</td></tr>
+        <tr><td>File / code tools</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>App launching</td><td>✅</td><td>⚠️</td><td>⚠️</td></tr>
+        <tr><td>Browser control</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>GUI</td><td>✅</td><td>✅</td><td>✅</td></tr>
+      </tbody>
+    </table>
+    <p class="platform-note">
+      ⚠️ = works with minor path configuration.<br>
+      Mac: app paths are Linux-style by default — swap to <code>/Applications/...</code> and replace <code>xdg-open</code> with <code>open</code>.<br>
+      Windows: not recommended natively — a VM is the smoother path for now.
+    </p>
+  </div>
+</section>
+
+<div class="cta-band">
+  <div class="wrap">
+    <p>Ready to see it running on your own machine?</p>
+    <a href="index.html#download" class="btn btn-primary">Download Atlas — free</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="brand" style="font-size:17px;">Atlas</div>
+      <div class="foot-links">
+        <a href="https://github.com/sdoylelambda/A.T.L.A.S.">GitHub</a>
+        <a href="https://github.com/sdoylelambda/A.T.L.A.S./blob/main/README.md">Documentation</a>
+        <a href="mailto:sdoyledev@gmail.com">Report an issue</a>
+        <a href="mailto:sdoyledev@gmail.com">Contact</a>
+      </div>
+    </div>
+    <div class="foot-fine">Atlas · MIT License · Built by Sean Doyle</div>
+  </div>
+</footer>
+
+</body>
+</html>
