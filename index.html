@@ -87,10 +87,22 @@
     text-decoration:none; border:1px solid transparent; transition:transform .15s ease, background .2s;
     cursor:pointer;
   }
+button.btn{
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  font: inherit;
+  font-size: 13px;
+  background: none;
+  cursor: pointer;
+  line-height: normal;
+}
   .btn-primary{background:var(--brass); color:var(--ink-900); font-weight:600;}
   .btn-primary:hover{background:var(--brass-bright); transform:translateY(-1px);}
   .btn-ghost{border-color:var(--line); color:var(--parchment);}
   .btn-ghost:hover{border-color:var(--brass); color:var(--brass-bright);}
+  
+
 
   /* compass rose signature element */
   .compass-wrap{display:flex; align-items:center; justify-content:center;}
@@ -449,6 +461,21 @@
       <h2>Download Atlas</h2>
       <p>Free, no account required. Pick your platform.</p>
     </div>
+    <div class="dl-note" style="margin-top:32px; border-top:1px dashed var(--line); padding-top:22px; text-align:left; line-height:1.7;">
+  <strong style="color:var(--brass-bright);">LINUX SETUP</strong><br>
+  1. Unzip <code>Atlas-linux.zip</code><br>
+  2. Run <code>./install.sh</code> once — this creates a desktop launcher<br>
+  3. Double-click <code>Atlas.desktop</code> to launch (choose "Allow Launching" if prompted)<br>
+  4. Requires Ollama installed locally with the <code>phi3:mini</code> model pulled
+
+  <br><br>
+
+  <strong style="color:var(--brass-bright);">ANDROID SETUP</strong><br>
+  1. Enable "install from unknown sources" on your device<br>
+  2. Install <code>Atlas.apk</code><br>
+  3. <strong>Requires the desktop version running on your computer</strong> — the Android app is a remote client that sends commands to Atlas on your machine, it doesn't run standalone<br>
+  4. Make sure both devices are on the same network to connect
+</div>
     <div class="downloads">
       <div class="dl-card">
         <div class="dl-platform">Windows - Coming soon!</div>
@@ -463,18 +490,32 @@
         <a href="#" class="btn btn-ghost" style="align-self:flex-start;">Download</a>
       </div>
       <div class="dl-card">
-        <div class="dl-platform">Linux</div>
-        <h3>Atlas.AppImage</h3>
-        <p>Portable — no install, just run it.</p>
-        <a href="#" class="btn btn-ghost" style="align-self:flex-start;">Download</a>
+      <div class="dl-platform">Linux</div>
+        <h3>Atlas-linux.zip</h3>
+        <p>Downloads in 3 parts — allow multiple downloads if your browser asks. Unzip with <code>zip -F Atlas-linux-split.zip --out Atlas-linux-full.zip</code>, then run <code>./install.sh</code>. Requires Ollama running locally with <code>phi3:mini</code> pulled.</p>
+  <button class="btn btn-ghost" style="align-self:flex-start;" onclick="downloadAtlasLinux()">Download</button>
       </div>
       <div class="dl-card">
         <div class="dl-platform">Android</div>
         <h3>Atlas.apk</h3>
-        <p>Sideload — enable "install from unknown sources".</p>
-        <a href="https://github.com/sdoylelambda/atlas-website/releases/download/v1.0.0/Atlas.apk" class="btn btn-ghost" style="align-self:flex-start;">Download</a>
+        <p>Unzip, run <code>./install.sh</code> once to create a launcher, then double-click Atlas. Requires Ollama running locally with the <code>phi3:mini</code> model pulled.</p>        <a href="https://github.com/sdoylelambda/atlas-website/releases/download/v1.0.0/Atlas.apk" class="btn btn-ghost" style="align-self:flex-start;">Download</a>
       </div>
     </div>
+    <div class="dl-note" style="margin-top:32px; border-top:1px dashed var(--line); padding-top:22px; text-align:left; line-height:1.7;">
+  <strong style="color:var(--brass-bright);">LINUX SETUP</strong><br>
+  1. Unzip <code>Atlas-linux.zip</code><br>
+  2. Run <code>./install.sh</code> once — this creates a desktop launcher<br>
+  3. Double-click <code>Atlas.desktop</code> to launch (choose "Allow Launching" if prompted)<br>
+  4. Requires Ollama installed locally with the <code>phi3:mini</code> model pulled
+
+  <br><br>
+
+  <strong style="color:var(--brass-bright);">ANDROID SETUP</strong><br>
+  1. Enable "install from unknown sources" on your device<br>
+  2. Install <code>Atlas.apk</code><br>
+  3. <strong>Requires the desktop version running on your computer</strong> — the Android app is a remote client that sends commands to Atlas on your machine, it doesn't run standalone<br>
+  4. Make sure both devices are on the same network to connect
+</div>
 <div class="dl-note"><a href="https://github.com/sdoylelambda/atlas-website/releases/tag/v1.0.0">View all releases on GitHub</a></div>      <p>Atlas is free. If it's useful to you, a small donation helps keep it that way.</p>
       <a href="#" class="btn btn-primary">Support the project</a>
     </div>
@@ -498,3 +539,24 @@
 
 </body>
 </html>
+
+<script>
+function downloadAtlasLinux() {
+  const files = [
+    'Atlas-linux-split.z01',
+    'Atlas-linux-split.z02',
+    'Atlas-linux-split.zip'
+  ];
+  const baseUrl = 'https://github.com/sdoylelambda/atlas-website/releases/download/v1.1.0/';
+  files.forEach((file, i) => {
+    setTimeout(() => {
+      const a = document.createElement('a');
+      a.href = baseUrl + file;
+      a.download = file;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }, i * 800);
+  });
+}
+</script>
