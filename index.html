@@ -218,6 +218,22 @@ button.btn{
   .dl-note a:hover{
     color: var(--brass);
   }
+  .setup-link{
+  display:inline-block;
+  margin-top:10px;
+  font-family:var(--mono);
+  font-size:12.5px;
+  letter-spacing:0.03em;
+  color:var(--brass-bright);
+  text-decoration:none;
+  border-bottom:1px solid var(--brass);
+  padding-bottom:2px;
+  transition:color .2s, border-color .2s;
+}
+.setup-link:hover{
+  color:var(--brass);
+  border-color:var(--brass-bright);
+}
 
   /* ---------- footer ---------- */
   footer{padding:64px 0 48px;}
@@ -257,7 +273,7 @@ button.btn{
     <div class="navlinks">
       <a href="#watch">Watch</a>
       <a href="#why">Why</a>
-      <a href="#features">Features</a>
+      <a href="features.html">Features</a>
       <a href="#gallery">Gallery</a>
       <a href="#download">Download</a>
     </div>
@@ -502,19 +518,21 @@ button.btn{
       </div>
     </div>
     <div class="dl-note" style="margin-top:32px; border-top:1px dashed var(--line); padding-top:22px; text-align:left; line-height:1.7;">
-  <strong style="color:var(--brass-bright);">LINUX SETUP</strong><br>
-  1. Unzip <code>Atlas-linux.zip</code><br>
-  2. Run <code>./install.sh</code> once — this creates a desktop launcher<br>
-  3. Double-click <code>Atlas.desktop</code> to launch (choose "Allow Launching" if prompted)<br>
-  4. Requires Ollama installed locally with the <code>phi3:mini</code> model pulled
-
+    <strong style="color:var(--brass-bright);">LINUX SETUP</strong><br>
+      1. Unzip <code>Atlas-linux.zip</code><br>
+      2. Run <code>./install.sh</code> once — this creates a desktop launcher<br>
+      3. Double-click <code>Atlas.desktop</code> to launch (choose "Allow Launching" if prompted)<br>
+      4. Requires Ollama installed locally with the <code>phi3:mini</code> model pulled
+    <br>
   <br><br>
 
   <strong style="color:var(--brass-bright);">ANDROID SETUP</strong><br>
   1. Enable "install from unknown sources" on your device<br>
   2. Install <code>Atlas.apk</code><br>
-  3. <strong>Requires the desktop version running on your computer</strong> — the Android app is a remote client that sends commands to Atlas on your machine, it doesn't run standalone<br>
-  4. Make sure both devices are on the same network to connect
+  3. Install and setup Tailscale<br>
+  4. <strong>Requires the desktop version running on your computer</strong> — the Android app is a remote client that sends commands to Atlas on your machine, it doesn't run standalone<br>
+  <a href="https://github.com/sdoylelambda/A.T.L.A.S.-mobile/blob/main/README.md" class="setup-link">Full setup instructions →</a>
+
 </div>
 <div class="dl-note"><a href="https://github.com/sdoylelambda/atlas-website/releases/tag/v1.0.0">View all releases on GitHub</a></div>      <p>Atlas is free. If it's useful to you, a small donation helps keep it that way.</p>
       <a href="#" class="btn btn-primary">Support the project</a>
@@ -533,7 +551,7 @@ button.btn{
         <a href="mailto:sdoyledev@gmail.com">Contact</a>
       </div>
     </div>
-    <div class="foot-fine">Atlas v0.7.3 · MIT License · Built by Sean Doyle</div>
+    <div class="foot-fine">Atlas v1.0.1 · MIT License · Built by Sean Doyle</div>
   </div>
 </footer>
 
