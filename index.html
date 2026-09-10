@@ -49,17 +49,45 @@
 
   /* ---------- nav ---------- */
   nav{
-    position:sticky; top:0; z-index:20;
-    background:rgba(12,22,34,0.86); backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--line);
+  position:sticky; top:0; z-index:20;
+  background:rgba(12,22,34,0.86); backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
   }
-  nav .wrap{display:flex; align-items:center; justify-content:space-between; padding:18px 32px;}
-  .brand{display:flex; align-items:center; gap:10px; font-family:var(--display); font-size:20px; font-weight:600; color:var(--parchment);}
-  .brand svg{width:22px; height:22px;}
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; padding:18px 32px; position:relative;}
+  .brand{
+    display:flex; align-items:center; gap:12px;
+    font-family:var(--display); font-size:24px; font-weight:600;
+    color:var(--parchment); letter-spacing:0.01em;
+  }
+  .brand svg{width:26px; height:26px; flex-shrink:0;}
   .navlinks{display:flex; gap:32px; font-size:14px; font-family:var(--mono);}
   .navlinks a{opacity:0.75; transition:opacity .2s;}
   .navlinks a:hover{opacity:1; color:var(--brass-bright);}
   @media (max-width:640px){ .navlinks{display:none;} }
+  .nav-toggle{
+    display:none;
+    background:none;
+    border:none;
+    color:var(--brass-bright);
+    font-size:22px;
+    cursor:pointer;
+    padding:4px 8px;
+  }
+  @media (max-width:640px){
+  .navlinks{
+    display:none;
+    position:absolute;
+    top:100%; left:-32px; right:-32px;
+    flex-direction:column;
+    gap:0;
+    background:var(--ink-800);
+    border-bottom:1px solid var(--line);
+    z-index:25;
+  }
+  .navlinks.open{display:flex;}
+  .navlinks a{padding:14px 32px; border-top:1px solid var(--line);}
+  .nav-toggle{display:block;}
+  }
 
   /* ---------- hero ---------- */
   header.hero{
@@ -108,11 +136,13 @@ button.btn{
   .compass-wrap{display:flex; align-items:center; justify-content:center;}
   .compass{width:min(340px, 100%); aspect-ratio:1; position:relative;}
   .compass svg{width:100%; height:100%; animation:spin 90s linear infinite;}
-  @media (prefers-reduced-motion: reduce){ .compass svg{animation:none;} }
-  @keyframes spin{ to{ transform:rotate(360deg); } }
+  @media (max-width:640px){
+  .compass{width:180px;}
+  }  @keyframes spin{ to{ transform:rotate(360deg); } }
   .compass-label{
     position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
     font-family:var(--mono); font-size:11px; letter-spacing:0.1em; color:var(--parchment-dim); text-align:center;
+    margin-top:64%;
   }
 
   /* ---------- section shell ---------- */
@@ -270,13 +300,14 @@ button.btn{
       <svg viewBox="0 0 24 24" fill="none" stroke="#c8a24d" stroke-width="1.4"><circle cx="12" cy="12" r="9.5"/><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3"/><path d="M12 12l4-6-6 4z" fill="#c8a24d" stroke="none"/></svg>
       Atlas
     </div>
-    <div class="navlinks">
+    <div class="navlinks" id="navlinks">
       <a href="#watch">Watch</a>
       <a href="#why">Why</a>
       <a href="features.html">Features</a>
       <a href="#gallery">Gallery</a>
       <a href="#download">Download</a>
     </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
   </div>
 </nav>
 
@@ -544,6 +575,12 @@ button.btn{
     <div class="foot-fine">Atlas v1.0.1 · MIT License · Built by Sean Doyle</div>
   </div>
 </footer>
+
+<script>
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navlinks').classList.toggle('open');
+});
+</script>
 
 </body>
 </html>
