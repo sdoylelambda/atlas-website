@@ -44,31 +44,45 @@
 
   /* ---------- nav ---------- */
   nav{
-    position:sticky; top:0; z-index:20;
-    background:rgba(12,22,34,0.86); backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--line);
+  position:sticky; top:0; z-index:20;
+  background:rgba(12,22,34,0.86); backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
   }
-  nav .wrap{display:flex; align-items:center; justify-content:space-between; padding:18px 32px;}
-  .brand{display:flex; align-items:center; gap:10px; font-family:var(--display); font-size:20px; font-weight:600; color:var(--parchment);}
-  .brand svg{width:22px; height:22px;}
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; padding:18px 32px; position:relative;}
+  .brand{
+    display:flex; align-items:center; gap:12px;
+    font-family:var(--display); font-size:24px; font-weight:600;
+    color:var(--parchment); letter-spacing:0.01em;
+  }
+  .brand svg{width:26px; height:26px; flex-shrink:0;}
   .navlinks{display:flex; gap:32px; font-size:14px; font-family:var(--mono);}
   .navlinks a{opacity:0.75; transition:opacity .2s;}
-  .navlinks a:hover, .navlinks a.active{opacity:1; color:var(--brass-bright);}
+  .navlinks a:hover{opacity:1; color:var(--brass-bright);}
   @media (max-width:640px){ .navlinks{display:none;} }
-
-  /* ---------- page header ---------- */
-  .page-header{
-    padding:80px 0 60px; position:relative;
-    background: radial-gradient(ellipse 900px 500px at 80% -10%, rgba(200,162,77,0.10), transparent 60%), var(--ink-900);
+  .nav-toggle{
+    display:none;
+    background:none;
+    border:none;
+    color:var(--brass-bright);
+    font-size:22px;
+    cursor:pointer;
+    padding:4px 8px;
+  }
+  @media (max-width:640px){
+  .navlinks{
+    display:none;
+    position:absolute;
+    top:100%; left:-32px; right:-32px;
+    flex-direction:column;
+    gap:0;
+    background:var(--ink-800);
     border-bottom:1px solid var(--line);
+    z-index:25;
   }
-  .page-header h1{font-size:clamp(36px, 5vw, 54px); line-height:1.05; margin:18px 0 16px;}
-  .page-header p{font-size:18px; color:var(--parchment-dim); max-width:60ch;}
-  .back-link{
-    font-family:var(--mono); font-size:13px; color:var(--parchment-dim); text-decoration:none;
-    display:inline-flex; align-items:center; gap:6px; margin-bottom:20px; transition:color .2s;
+  .navlinks.open{display:flex;}
+  .navlinks a{padding:14px 32px; border-top:1px solid var(--line);}
+  .nav-toggle{display:block;}
   }
-  .back-link:hover{color:var(--brass-bright);}
 
   /* ---------- section shell ---------- */
   section{padding:80px 0; border-bottom:1px solid var(--line);}
@@ -185,13 +199,14 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="#c8a24d" stroke-width="1.4"><circle cx="12" cy="12" r="9.5"/><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3"/><path d="M12 12l4-6-6 4z" fill="#c8a24d" stroke="none"/></svg>
       Atlas
     </div>
-    <div class="navlinks">
+    <div class="navlinks" id="navlinks">
       <a href="index.html#watch">Watch</a>
       <a href="index.html#why">Why</a>
-      <a href="features.html" class="active">Features</a>
+      <a href="index.html#features">Features</a>
       <a href="index.html#gallery">Gallery</a>
       <a href="index.html#download">Download</a>
-    </div>
+   </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
   </div>
 </nav>
 
@@ -424,5 +439,18 @@
   </div>
 </footer>
 
+<script>
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navlinks').classList.toggle('open');
+});
+</script>
+
 </body>
 </html>
+
+
+<script>
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navlinks').classList.toggle('open');
+});
+</script>
