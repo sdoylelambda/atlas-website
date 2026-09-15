@@ -560,14 +560,14 @@ button.btn{
       <div class="dl-platform">Android</div>
         <h3>Atlas.apk</h3>
         <p>Download directly on your phone, or transfer the file over. Allow installs from unknown/third-party sources when prompted. Requires the desktop version running on your computer.</p>
-        <a href="https://github.com/sdoylelambda/atlas-website/releases/download/v1.1.0/Atlas.apk" class="btn btn-ghost" style="align-self:flex-start;">Download</a>
+        <a href="#" id="androidDownload" class="btn btn-ghost" style="align-self:flex-start;">Download</a>
     </div>
     </div>
     <div class="dl-note" style="margin-top:32px; border-top:1px dashed var(--line); padding-top:22px; text-align:left; line-height:1.7;">
   <br><br>
 
 </div>
-<div class="dl-note"><a href="https://github.com/sdoylelambda/atlas-website/releases/">View all releases on GitHub</a></div>      <p>Atlas is free. If it's useful to you, a small donation helps keep it that way.</p>
+<div class="dl-note"><a href="https://github.com/sdoylelambda/atlas-website/releases">View all releases on GitHub</a></div>      <p>Atlas is free. If it's useful to you, a small donation helps keep it that way.</p>
       <a href="#" class="btn btn-primary">Support the project</a>
     </div>
   </div>
@@ -584,7 +584,7 @@ button.btn{
         <a href="mailto:sdoyledev@gmail.com">Contact</a>
       </div>
     </div>
-    <div class="foot-fine">Atlas v1.2.0 · MIT License · Built by Sean Doyle</div>
+    <div class="foot-fine" id="footVersion">Atlas · MIT License · Built by Sean Doyle</div>
   </div>
 </footer>
 
@@ -594,26 +594,33 @@ document.getElementById('navToggle').addEventListener('click', () => {
 });
 </script>
 
+<script>
+  const ATLAS_VERSION = 'v1.2.0';
+  const RELEASE_BASE = `https://github.com/sdoylelambda/atlas-website/releases/download/${ATLAS_VERSION}/`;
+
+  document.getElementById('footVersion').textContent =
+    `Atlas ${ATLAS_VERSION} · MIT License · Built by Sean Doyle`;
+
+  document.getElementById('androidDownload').href = RELEASE_BASE + 'Atlas.apk';
+
+  function downloadAtlasLinux() {
+    const files = [
+      'Atlas-linux-split.z01',
+      'Atlas-linux-split.z02',
+      'Atlas-linux-split.zip'
+    ];
+    files.forEach((file, i) => {
+      setTimeout(() => {
+        const a = document.createElement('a');
+        a.href = RELEASE_BASE + file;
+        a.download = file;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }, i * 800);
+    });
+  }
+</script>
+
 </body>
 </html>
-
-<script>
-function downloadAtlasLinux() {
-  const files = [
-    'Atlas-linux-split.z01',
-    'Atlas-linux-split.z02',
-    'Atlas-linux-split.zip'
-  ];
-  const baseUrl = 'https://github.com/sdoylelambda/atlas-website/releases/download/v1.1.0/';
-  files.forEach((file, i) => {
-    setTimeout(() => {
-      const a = document.createElement('a');
-      a.href = baseUrl + file;
-      a.download = file;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }, i * 800);
-  });
-}
-</script>
