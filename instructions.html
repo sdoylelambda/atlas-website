@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas — Mobile Setup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Sans+3:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-900:#0c1622;
+    --ink-800:#101d2e;
+    --ink-700:#16273b;
+    --brass:#c8a24d;
+    --brass-bright:#e6c574;
+    --parchment:#f2e9d6;
+    --parchment-dim:#cfc4a8;
+    --line: rgba(200,162,77,0.28);
+    --display: 'Fraunces', serif;
+    --body: 'Source Sans 3', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background: var(--ink-900);
+    color: var(--parchment);
+    font-family: var(--body);
+    line-height:1.6;
+  }
+  a{color:var(--brass-bright);}
+  .wrap{max-width:760px; margin:0 auto; padding:0 32px;}
+  h1,h2,h3{font-family:var(--display); font-weight:600; letter-spacing:-0.01em;}
+
+  header{
+    padding:70px 0 48px; border-bottom:1px solid var(--line);
+    background: radial-gradient(ellipse 800px 400px at 80% -10%, rgba(200,162,77,0.10), transparent 60%), var(--ink-900);
+  }
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:0.18em; text-transform:uppercase;
+    color:var(--brass-bright); display:flex; align-items:center; gap:10px; margin-bottom:16px;
+  }
+  .eyebrow::before{content:''; width:22px; height:1px; background:var(--brass); display:inline-block;}
+  .back-link{
+    font-family:var(--mono); font-size:13px; color:var(--parchment-dim); text-decoration:none;
+    display:inline-flex; align-items:center; gap:6px; margin-bottom:24px;
+  }
+  header h1{font-size:clamp(30px,5vw,44px); margin-bottom:14px;}
+  header p{color:var(--parchment-dim); font-size:17px; max-width:56ch;}
+
+  main{padding:56px 0 80px;}
+
+  .step{
+    display:grid; grid-template-columns:44px 1fr; gap:20px;
+    padding:32px 0; border-top:1px solid var(--line);
+  }
+  .step:last-child{border-bottom:1px solid var(--line);}
+  .step-num{
+    font-family:var(--mono); font-size:14px; color:var(--brass-bright);
+    width:44px; height:44px; border:1px solid var(--line); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .step h2{font-size:20px; margin-bottom:10px; color:var(--parchment);}
+  .step p{color:var(--parchment-dim); font-size:15px; margin-bottom:10px;}
+  .step ul{color:var(--parchment-dim); font-size:15px; padding-left:20px; margin-bottom:10px;}
+  .step li{margin-bottom:6px;}
+
+  code{
+    font-family:var(--mono); font-size:13px; background:var(--ink-800);
+    border:1px solid var(--line); border-radius:4px; padding:2px 7px; color:var(--brass-bright);
+  }
+  pre{
+    font-family:var(--mono); font-size:13px; background:var(--ink-800);
+    border:1px solid var(--line); border-radius:6px; padding:14px 16px;
+    overflow-x:auto; margin:10px 0; color:var(--parchment);
+  }
+
+  .note{
+    border:1px dashed var(--line); border-radius:6px; padding:14px 16px;
+    font-size:13.5px; color:var(--parchment-dim); margin-top:10px;
+  }
+  .note strong{color:var(--brass-bright);}
+
+  .platform-tag{
+    display:inline-block; font-family:var(--mono); font-size:11px; letter-spacing:0.06em;
+    text-transform:uppercase; color:var(--brass-bright); border:1px solid var(--line);
+    border-radius:999px; padding:3px 10px; margin-bottom:10px;
+  }
+
+  footer{
+    padding:40px 0 56px; border-top:1px solid var(--line);
+    font-family:var(--mono); font-size:12px; color:var(--parchment-dim); text-align:center;
+  }
+  footer a{color:var(--brass-bright);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a href="index.html" class="back-link">← Back to Atlas</a>
+    <div class="eyebrow">Mobile setup</div>
+    <h1>Get Atlas on your phone</h1>
+    <p>The Android app is a remote client — it sends commands to Atlas running on your desktop over a private, encrypted network. Follow these steps once and you're set.</p>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <span class="platform-tag">Desktop</span>
+        <h2>Install Tailscale</h2>
+        <p>Tailscale creates a private, encrypted tunnel between your phone and desktop — it works over WiFi, cellular, or anywhere else, without exposing anything to the open internet.</p>
+        <pre>curl -fsSL https://tailscale.com/install.sh | sh
+sudo tailscale up</pre>
+        <p>Once connected, note your desktop's Tailscale IP — you'll need it later:</p>
+        <pre>tailscale ip -4</pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <span class="platform-tag">Phone</span>
+        <h2>Install Tailscale on your phone</h2>
+        <p>Install <strong>Tailscale</strong> from the Play Store (or App Store on iOS) and sign in using the <em>same account</em> you used on the desktop. Both devices need to be on the same Tailscale network to talk to each other. Tailscale must be running on your phone prior to connecting every time.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <span class="platform-tag">Desktop</span>
+        <h2>Generate your pairing QR code</h2>
+        <p>With Atlas running on your computer, click the <strong>⚙ settings icon</strong> in the app (between Cancel and Mute) to open the settings panel, then click:</p>
+        <p><code>Generate Mobile QR Code</code></p>
+        <p>A QR code will appear in the panel — it encodes your Atlas API key. This is what lets the mobile app authenticate with your desktop without you typing a long key by hand.</p>
+        <div class="note"><strong>Keep this private</strong> — anyone who scans this QR code can control Atlas on your machine. Don't screenshot or share it.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <span class="platform-tag">Phone</span>
+        <h2>Install the Atlas mobile app and scan</h2>
+        <p>Install the Atlas Android app, then open it and choose <strong>Pair with Desktop</strong> (or the equivalent option on first launch). Point your camera at the QR code from Step 3 — the app will read the API key automatically.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <span class="platform-tag">Phone</span>
+        <h2>Log in with your Linux password</h2>
+        <p>The first time you connect, you'll be prompted to enter the login password for your desktop's Linux user account. This authenticates the connection over the network — it's the same password you use to log into your computer.</p>
+        <div class="note">This is only asked once per device pairing — after that, the app reconnects automatically whenever both devices are on the Tailscale network.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">✓</div>
+      <div>
+        <h2>You're set</h2>
+        <p>With both devices connected over Tailscale and paired, you can talk to Atlas from your phone — it processes everything on your desktop and sends the response back to your phone's mic and speaker.</p>
+        <p>Desktop needs to be powered on and Atlas running for the mobile app to work — it's a remote control, not a standalone assistant.</p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    Questions or issues? <a href="https://github.com/sdoylelambda/A.T.L.A.S.-mobile/issues">Open an issue on GitHub</a>
+  </div>
+</footer>
+
+</body>
+</html>
