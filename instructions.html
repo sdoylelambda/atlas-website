@@ -461,11 +461,11 @@
 
       </ol>
 
-      <div class="note">
+      <!-- <div class="note">
         <strong>Don't worry if the Terminal looks unfamiliar.</strong>
         You only need to copy and paste the command above. You don't need to
         type anything else.
-      </div>
+      </div> -->
 
     </div>
   </div>
@@ -478,7 +478,7 @@
       <h2>Run the Atlas installer</h2>
 
       <p>
-        Open a Terminal inside the Atlas folder and run the installer:
+        Open a Terminal (same way as above) inside the Atlas folder and run the installer:
       </p>
 
       <pre>./install.sh</pre>
@@ -504,13 +504,13 @@
 
       <p>
         Atlas uses Ollama to run its local AI models. Make sure Ollama is installed
-        and running on your computer, then download the models Atlas uses by opening the Terminal (the same way as above) and running these commands.
+        and running on your computer, then download the models Atlas uses by opening the Terminal (same way as above) and running these commands.
       </p>
-
-      <pre>ollama pull phi3:mini
-ollama pull mistral:7b
-ollama pull deepseek-coder:6.7b
-ollama pull llava</pre>
+        <pre>curl -fsSL https://ollama.com/install.sh | sh</pre>
+        <pre>ollama pull phi3:mini</pre>
+        <pre>ollama pull mistral:7b</pre>
+        <pre>ollama pull deepseek-coder:6.7b</pre>
+        <pre>ollama pull llava</pre>
 
       <p>
         These models are used for different tasks, including everyday conversations,
@@ -567,11 +567,11 @@ ollama pull llava</pre>
     <div class="step-num">5</div>
 
     <div>
-      <h2>Optional: Connect Gemini / Claude</h2>
+      <h2>Optional: Connect Gemini</h2>
 
       <p>
-        Atlas can use Google's Gemini models and or Claude as an optional cloud-based AI service.
-        You only need to do this if you want to use Gemini and or Claude.
+        Atlas can use Google's Gemini models as an optional cloud-based AI service.
+        You only need to complete this step if you want to use Gemini.
       </p>
 
       <p>
@@ -584,6 +584,66 @@ ollama pull llava</pre>
         and paste it into the Atlas text area labeled <strong>Type a command</strong>
         when prompted.
       </p>
+
+      <div class="note">
+        <strong>Keep your API key private.</strong>
+        Treat it like a password. Do not post it publicly, include it in screenshots,
+        or commit it to GitHub.
+      </div>
+    </div>
+  </div>
+
+
+  <div class="step">
+    <div class="step-num">6</div>
+
+    <div>
+      <h2>Optional: Connect Claude</h2>
+
+      <p>
+        Atlas can also use Anthropic's Claude models as an optional cloud-based AI service.
+        You only need to complete this step if you want to use Claude.
+      </p>
+
+      <h3 style="margin-top:20px; margin-bottom:10px;">
+        Create a Claude API key
+      </h3>
+
+      <ol style="padding-left:22px; margin-bottom:14px;">
+        <li style="margin-bottom:8px;">
+          Open the <strong>Anthropic Console</strong> in your web browser and sign in
+          or create an account.
+        </li>
+        <li style="margin-bottom:8px;">
+          Open the API key management area in the Console and choose the option to
+          <strong>create a new API key</strong>.
+        </li>
+        <li style="margin-bottom:8px;">
+          Give the key a name that helps you remember what it is for, such as
+          <code>Atlas</code>.
+        </li>
+        <li style="margin-bottom:8px;">
+          Create the key and <strong>copy it</strong>. Keep it somewhere secure while
+          you complete the Atlas setup.
+        </li>
+      </ol>
+
+      <p>
+        Anthropic's API uses prepaid usage credits. If your API account has not been
+        funded yet, open the <strong>Billing</strong> area in the Anthropic Console
+        and add usage credits before trying to use Claude through Atlas.
+      </p>
+
+      <p>
+        Once Atlas asks for your Claude API key, paste the key into the Atlas text area
+        labeled <strong>Type a command</strong> when prompted.
+      </p>
+
+      <div class="note">
+        <strong>Important:</strong>
+        A Claude.ai subscription and Anthropic API usage are separate. Having a paid
+        Claude chat subscription does not automatically provide API credits for Atlas.
+      </div>
 
       <div class="note">
         <strong>Keep your API key private.</strong>
@@ -708,7 +768,7 @@ sudo tailscale up</pre>
 
       <div class="note">
         <strong>Important:</strong>
-        Only install the Atlas APK from a source you trust.
+        Only install the Atlas APK from this site.
       </div>
     </div>
   </div>
@@ -807,14 +867,19 @@ sudo tailscale up</pre>
     <div class="step-num">6</div>
 
     <div>
-      <h2>Find your Tailscale IP address</h2>
+      <h2>Install Tailscale and Find your Tailscale IP address</h2>
 
       <p>
         You need to find your computer's Tailscale IP address, open a Terminal
         on your computer and run:
       </p>
 
+      <pre>pip install fastapi uvicorn qrcode Pillow --break-system-packages</pre>
+      <pre>openssl rand -hex 32 > ~/.config/atlas/api_key</pre>
+      <pre>chmod 600 ~/.config/atlas/api_key</pre>
       <pre>tailscale ip -4</pre>
+      <pre>sudo apt install openssh-server</pre>
+      <pre>sudo systemctl enable --now ssh</pre>
 
       <p>
         Use the address shown by this command for both the
@@ -988,7 +1053,7 @@ sudo tailscale up</pre>
       <h3>Atlas asks for my password</h3>
 
       <p>
-        When Atlas Mobile makes a connection, it may ask for the password you normally
+        When Atlas Mobile makes a connection, it asks for the password you normally
         use to log in to the Linux computer running Atlas.
       </p>
 
@@ -1027,7 +1092,7 @@ sudo tailscale up</pre>
         from a Terminal:
       </p>
 
-      <pre>ollama pull phi3:mini
+      <pre>curl -fsSL https://ollama.com/install.sh | sh ollama pull phi3:mini
 ollama pull mistral:7b
 ollama pull deepseek-coder:6.7b
 ollama pull llava</pre>
