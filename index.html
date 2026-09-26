@@ -536,31 +536,47 @@ button.btn{
   <br><br> -->
     <a href="instructions.html" class="btn btn-primary">Install Instructions →</a>  
   <br><br>
-</div>
-    <div class="downloads">
-      <div class="dl-card">
-        <div class="dl-platform">Windows - Coming soon!</div>
-        <h3>Atlas.exe</h3>
-        <p>Standalone build, no installer needed.</p>
-        <a href="#" class="btn btn-ghost" style="align-self:flex-start;">Download</a>
-      </div>
-      <div class="dl-card">
-        <div class="dl-platform">macOS - Coming soon!</div>
-        <h3>Atlas.dmg</h3>
-        <p>Universal build, Intel and Apple Silicon.</p>
-        <a href="#" class="btn btn-ghost" style="align-self:flex-start;">Download</a>
-      </div>
-      <div class="dl-card">
+    </div>
+        <div class="downloads">
+          <div class="dl-card">
+      <div class="dl-platform">Windows</div>
+      <h3>Atlas-windows.zip</h3>
+      <a
+        href="https://github.com/sdoylelambda/atlas-website/releases/download/v1.4.5/Atlas-windows.zip"
+        class="btn btn-ghost"
+        style="align-self:flex-start;"
+      >Download</a>
+    </div>
+
+    <div class="dl-card">
+      <div class="dl-platform">macOS</div>
+      <h3>Atlas-mac.zip</h3>
+      <a
+        href="https://github.com/sdoylelambda/atlas-website/releases/download/v1.4.5/Atlas-mac.zip"
+        class="btn btn-ghost"
+        style="align-self:flex-start;"
+      >Download</a>
+    </div>
+
+    <div class="dl-card">
       <div class="dl-platform">Linux</div>
-        <h3>Atlas-linux.zip</h3>
-        <!-- <p>Downloads in 3 parts — allow multiple downloads if your browser asks. Unzip with <code>zip -F Atlas-linux-split.zip --out Atlas-linux-full.zip</code>, then run <code>./install.sh</code>. Requires Ollama running locally with <code>phi3:mini</code> pulled.</p> -->
-  <button class="btn btn-ghost" style="align-self:flex-start;" onclick="downloadAtlasLinux()">Download</button>
-      </div>
-      <div class="dl-card">
+      <h3>Atlas-linux.zip</h3>
+      <button
+        class="btn btn-ghost"
+        style="align-self:flex-start;"
+        onclick="downloadAtlasLinux()"
+      >Download</button>
+    </div>
+
+    <div class="dl-card">
       <div class="dl-platform">Android</div>
-        <h3>Atlas.apk</h3>
-        <!-- <p>Download directly on your phone, or transfer the file over. Allow installs from unknown/third-party sources when prompted. Requires the desktop version running on your computer.</p> -->
-        <a href="#" id="androidDownload" class="btn btn-ghost" style="align-self:flex-start;">Download</a>
+      <h3>Atlas.apk</h3>
+      <a
+        href="#"
+        id="androidDownload"
+        class="btn btn-ghost"
+        style="align-self:flex-start;"
+      >Download</a>
     </div>
     </div>
     <div class="dl-note" style="margin-top:32px; border-top:1px dashed var(--line); padding-top:22px; text-align:left; line-height:1.7;">
@@ -595,13 +611,20 @@ document.getElementById('navToggle').addEventListener('click', () => {
 </script>
 
 <script>
-  const ATLAS_VERSION = 'v1.2.0';
-  const RELEASE_BASE = `https://github.com/sdoylelambda/atlas-website/releases/download/${ATLAS_VERSION}/`;
+  const ATLAS_VERSION = 'v1.4.5';
+  const LINUX_VERSION = 'v1.2.0';
+
+  const RELEASE_BASE =
+    `https://github.com/sdoylelambda/atlas-website/releases/download/${ATLAS_VERSION}/`;
+
+  const LINUX_RELEASE_BASE =
+    `https://github.com/sdoylelambda/atlas-website/releases/download/${LINUX_VERSION}/`;
 
   document.getElementById('footVersion').textContent =
     `Atlas ${ATLAS_VERSION} · MIT License · Built by Sean Doyle`;
 
-  document.getElementById('androidDownload').href = RELEASE_BASE + 'Atlas.apk';
+  document.getElementById('androidDownload').href =
+    RELEASE_BASE + 'Atlas.apk';
 
   function downloadAtlasLinux() {
     const files = [
@@ -609,11 +632,14 @@ document.getElementById('navToggle').addEventListener('click', () => {
       'Atlas-linux-split.z02',
       'Atlas-linux-split.zip'
     ];
+
     files.forEach((file, i) => {
       setTimeout(() => {
         const a = document.createElement('a');
-        a.href = RELEASE_BASE + file;
+
+        a.href = LINUX_RELEASE_BASE + file;
         a.download = file;
+
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
